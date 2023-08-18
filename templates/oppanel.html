@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}OPPANEL{% endblock %}
+{% block content %}
+<hr/>
+{{players}}
+<hr/>
+<table border="0" width="100%">
+    <form method="post" action="/time">
+        <tr>
+            <td>Time: {{current}} ({{ ((current / 24000)*100)|round(0) }}% )</td>
+            {% for daytime in ["🌄day", "🌞noon", "🌃night", "🌕midnight"] %}
+            <td align="center">
+            <input type="submit" name="desired_time" value={{daytime}}>
+            </td>
+            {% endfor %}
+        </tr>
+        </form>
+    <hr>
+    <form method="post" action="/weather">
+            <tr>
+                <td>Weather</td>
+                {% for weather in ["🌞clear", "🌧rain", "❄snow","🗲thunder"] %}
+                <td align="center">
+                <input type="submit" name="desired_weather" value={{weather}}>
+                </td>
+                {% endfor %}
+            </tr>
+
+    </form>
+</table>
+<hr>
+
+<table border="0" width="100%">
+    {% for player in players %}
+    <form method="post" action="/player/{{player.name}}">
+
+        <tr>
+            <td>{{player.name}}
+            <input type="hidden" name="Pos" value="{{player['Pos']}}">
+            <input type="hidden" name="LastDeath" value="{{player['LastDeath']}}">
+
+            </td>
+
+            <td><input type="submit" name="mode" value="👞kick">
+                <input type="submit" name="mode" value="☝️OP">
+                <input type="submit" name="mode" value="👇DEOP"></td>
+            <td><input type="submit" name="mode" value="🍕survival">
+                <input type="submit" name="mode" value="🎓creative"></td>
+            <td>
+                <input type="submit" name="mode" value="🔍teleport to">
+                <select name="tp_to">
+                <option value="LastDeath">LastDeath</option>
+                {% for p in players %}
+                    {% if p.name != player.name %} <option value="{{p.name}}">{{p.name}}</option> {% endif %}
+                {% endfor %}
+                </select>
+            </td>
+        </tr>
+    </form>
+    {% endfor %}
+
+</table>
+
+</body>
+{% endblock %}

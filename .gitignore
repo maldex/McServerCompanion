@@ -3,4 +3,5 @@
 .ssh/
 .cache/
 .local/
-.
+.backups/
+data/

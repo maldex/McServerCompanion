@@ -18,7 +18,7 @@ services:
       MAX_PLAYERS: 6
       SERVER_NAME: "server.camp"
       DIFICULTY: "NORMAL"
-      MOTD: "Camp Server"
+      MOTD: "Our Server"
       ICON: "https://github.com/maldex/McServerCompanion/blob/main/templates/server-icon.png?raw=true"
 #      OPS: "ops,dont,work,in,offline,mode"
       ENABLE_WHITELIST: "FALSE"

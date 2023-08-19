@@ -1,13 +1,10 @@
 {% extends "base.html" %}
 {% block title %}OPPANEL{% endblock %}
 {% block content %}
-<hr/>
-{{players}}
-<hr/>
 <table border="0" width="100%">
     <form method="post" action="/time">
         <tr>
-            <td>Time: {{current}} ({{ ((current / 24000)*100)|round(0) }}% )</td>
+            <td>Time: {{current}} ({{ ((current / 24000)*100)|round(0) }}%)</td>
             {% for daytime in ["🌄day", "🌞noon", "🌃night", "🌕midnight"] %}
             <td align="center">
             <input type="submit" name="desired_time" value={{daytime}}>

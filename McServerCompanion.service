@@ -1,0 +1,14 @@
+[Unit]
+Description=Minecraft Server Companion
+After=network.target docker.service
+
+[Service]
+ExecStartPre=/bin/sleep 30
+User=mc
+WorkingDirectory=/home/mc
+ExecStart=/usr/bin/python3 ./McServerCompanion.py
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

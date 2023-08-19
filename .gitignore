@@ -1,7 +1,9 @@
-.bash_history
+.bash*
+.lesshst
 .python_history
 .ssh/
 .cache/
 .local/
 .backups/
+.config/
 data/

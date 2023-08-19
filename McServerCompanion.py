@@ -12,8 +12,8 @@ logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 
 class OurRcon():
-    def __init__(self, server="server.camp", passd="chaneme_iam_a_password"):
-        self.mcr = MCRcon(server, passd)
+    def __init__(self, server="server.camp", passwd="chaneme_iam_a_password"):
+        self.mcr = MCRcon(server, passwd)
         self.mcr.connect()
 
     def get_time(self):
@@ -47,11 +47,11 @@ app = Flask(__name__)
 
 @app.route('/favicon.ico')
 def url_favicon():
-    return send_file('templates\\favicon.png')
+    return send_file('templates/favicon.png')
 
 @app.route('/server-icon.png')
 def url_servericon():
-    return send_file('templates\\server-icon.png')
+    return send_file('templates/server-icon.png')
 
 @app.route("/")
 def url_root():
@@ -134,9 +134,10 @@ if __name__ == "__main__":
             if l.strip().startswith("RCON_PASSWORD"):
                 passwd = l.split(':')[-1].strip()
 
-    server = OurRcon(server='dockermine', passd=passwd)
+    print(passwd)
+    server = OurRcon(server = 'localhost', passwd = passwd)
 
-    x = threading.Thread(target = sched.start)  # start the scheduler
+    x = threading.Thread(target = sched.start)
     x.start()
 
 

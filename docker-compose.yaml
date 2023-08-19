@@ -20,7 +20,7 @@ services:
       DIFICULTY: "NORMAL"
       MOTD: "Camp Server"
       ICON: "https://github.com/maldex/McServerCompanion/blob/main/templates/server-icon.png?raw=true"
-      OPS: "ops,dont,work,in,offline,mode"
+#      OPS: "ops,dont,work,in,offline,mode"
       ENABLE_WHITELIST: "FALSE"
       ENFORCE_WHITELIST: "FALSE"
       ENABLE_RCON: "TRUE" 

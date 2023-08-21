@@ -1,19 +1,28 @@
+# Minecraft Server Companion
+Little Flask-ui for small teams, allowing time and weather changes, and teleporting players to each othern.
 
+![screenshot.png](screenshot.png)
 
+![screenshot2.png](screenshot2.png)
 
 ### Requirements
 Everything for minecraft of coarse. we're using [mc server container](https://github.com/itzg/docker-minecraft-server) and [docker-compose](https://docs.docker.com/compose/install/)
-for the 
 
-
-
-
-
-### test the rcon module
+### get started
 ```python
+# install python requirements
+pip3 install mcrcon flask apscheduler requests
+
+# add as service
+sudo systemctl enable --now ${PWD}/McServerCompanion.service
+
+# test the rcon module
 from mcrcon import MCRcon
 mcr = MCRcon("server.camp", "rootroot")
 mcr.connect()
 print(mcr.command("say hi"))
 print(mcr.command("list uuids"))
 ```
+
+### access this UI
+http://<serverIP>:25564

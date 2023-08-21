@@ -2,7 +2,7 @@
 # https://github.com/maldex/TimedTrafficLight
 # pip3 install mcrcon flask apscheduler requests
 
-import ast, json, logging, datetime, threading, requests
+import ast, json, logging, datetime, threading, requests, os
 from flask import Flask, request, render_template, redirect, send_file
 from mcrcon import MCRcon
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -21,7 +21,11 @@ class OurRcon():
 
     def send_cmd(self, cmd):
         logging.debug(F"send to rcon: '{cmd}'")
-        ret = self.mcr.command(F"{cmd}")
+        try:
+           ret = self.mcr.command(F"{cmd}")
+        except Exception as e:
+           logging.warn(e)
+           quit()
         logging.debug(F"received from rcon: '{ret}")
         return ret
 
@@ -134,8 +138,7 @@ if __name__ == "__main__":
             if l.strip().startswith("RCON_PASSWORD"):
                 passwd = l.split(':')[-1].strip()
 
-    print(passwd)
-    server = OurRcon(server = 'localhost', passwd = passwd)
+    server = OurRcon(server = 'dockermine', passwd = passwd)
 
     x = threading.Thread(target = sched.start)
     x.start()

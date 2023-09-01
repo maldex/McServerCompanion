@@ -17,12 +17,13 @@ pip3 install mcrcon flask apscheduler requests
 sudo systemctl enable --now ${PWD}/McServerCompanion.service
 
 # test the rcon module
+import socket
 from mcrcon import MCRcon
-mcr = MCRcon("server.camp", "rootroot")
+mcr = MCRcon( socket.gethostname(), "changeme_iam_a_password")
 mcr.connect()
 print(mcr.command("say hi"))
 print(mcr.command("list uuids"))
 ```
 
 ### access this UI
-http://<serverIP>:25564
+http://your-server:25564

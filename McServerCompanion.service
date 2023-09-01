@@ -3,7 +3,7 @@ Description=Minecraft Server Companion
 After=network.target docker.service
 
 [Service]
-ExecStartPre=/bin/sleep 30
+ExecStartPre=/bin/sleep 10
 User=mc
 WorkingDirectory=/home/mc
 ExecStart=/usr/bin/python3 ./McServerCompanion.py

@@ -2,7 +2,7 @@
 # https://github.com/maldex/TimedTrafficLight
 # pip3 install mcrcon flask apscheduler requests
 
-import ast, json, logging, datetime, threading, requests, os
+import ast, json, logging, datetime, threading, requests, os, socket
 from flask import Flask, request, render_template, redirect, send_file
 from mcrcon import MCRcon
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -133,7 +133,7 @@ def timed_job():
     requests.post("http://127.0.0.1:25564/announce", data={'text': msg} )
 
 if __name__ == "__main__":
-    server = OurRcon(server = 'dockermine', passwd = "changeme_iam_a_password")
+    server = OurRcon(server = socket.gethostname(), passwd = "changeme_iam_a_password")
 
     x = threading.Thread(target = sched.start)
     x.start()

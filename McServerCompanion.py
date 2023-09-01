@@ -12,7 +12,7 @@ logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
 
 class OurRcon():
-    def __init__(self, server="server.camp", passwd="chaneme_iam_a_password"):
+    def __init__(self, server="server.camp", passwd="a_password"):
         self.mcr = MCRcon(server, passwd)
         self.mcr.connect()
 
@@ -133,12 +133,7 @@ def timed_job():
     requests.post("http://127.0.0.1:25564/announce", data={'text': msg} )
 
 if __name__ == "__main__":
-    with open("docker-compose.yaml", 'r') as f:
-        for l in f.readlines():
-            if l.strip().startswith("RCON_PASSWORD"):
-                passwd = l.split(':')[-1].strip()
-
-    server = OurRcon(server = 'dockermine', passwd = passwd)
+    server = OurRcon(server = 'dockermine', passwd = "changeme_iam_a_password")
 
     x = threading.Thread(target = sched.start)
     x.start()

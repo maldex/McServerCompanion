@@ -1,9 +1,9 @@
 # Minecraft Server Companion
-Little Flask-ui for small teams, allowing time and weather changes, and teleporting players to each othern.
+Little Flask-ui for small teams, allowing time and weather changes, and teleporting players to each other.
 
 ![screenshot.png](screenshot.png)
 
-![screenshot2.png](screenshot2.png)
+![screenshot2.jpg](screenshot2.jpg)
 
 ### Requirements
 Everything for minecraft of coarse. we're using [mc server container](https://github.com/itzg/docker-minecraft-server) and [docker-compose](https://docs.docker.com/compose/install/)

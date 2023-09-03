@@ -1,7 +1,7 @@
 # Minecraft Server Companion
 Little Flask-ui for small teams, allowing time and weather changes, and teleporting players to each other.
 
-![Screenshot.jpg](screenshot.jpg)
+![Screenshot1.jpg](Screenshot1.jpg)
 
 ![Screenshot2.jpg](Screenshot2.jpg)
 

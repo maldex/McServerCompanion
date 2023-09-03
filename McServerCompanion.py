@@ -9,6 +9,8 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
+mcserver = "server.camp" #socket.gethostname()
+mcpass = "changeme_iam_a_password"
 
 
 class OurRcon():
@@ -20,13 +22,13 @@ class OurRcon():
         return int(self.send_cmd(F"time query daytime").split('is ')[-1])
 
     def send_cmd(self, cmd):
-        logging.debug(F"send to rcon: '{cmd}'")
+        logging.debug(F"RCON: sending '{cmd}'")
         try:
            ret = self.mcr.command(F"{cmd}")
         except Exception as e:
            logging.warn(e)
            quit()
-        logging.debug(F"received from rcon: '{ret}")
+        logging.debug(F"RCON: receivd '{ret}")
         return ret
 
     def get_players(self):
@@ -41,10 +43,19 @@ class OurRcon():
             )
             p['Pos'] = [ int(d) for d in p['Pos'] ]
 
+            p['Dim'] = (
+                self.send_cmd(F"data get entity @p[name={p['name']}] Dimension").split('data: ')[-1][+1:-1] # remove parantheses
+            )
+
+
             LastDeath = self.send_cmd(F"data get entity @p[name={p['name']}] LastDeathLocation").split('data: ')[
                 -1].replace('I; ', '')
             p['LastDeath'] = [c.strip() for c in LastDeath[LastDeath.find("[") + 1:LastDeath.find("]")].split(',')]
+            p['LastDim'] = LastDeath.split('dimension:')[-1][+1:-1] # remove parantheses
+
+            pprint(p)
             ret.append(p)
+
         return ret
 
 app = Flask(__name__)
@@ -67,12 +78,10 @@ def url_oppannel():
     try:
         current_players = server.get_players()
     except Exception as e:
-        return "<p>seems noone is logged in!</p>"
+        return "<title>no user</title><h1><p>seems noone is logged in!</p></h1>"
     return render_template("oppanel.html",
                            current = server.get_time(),
                            players = current_players,)
-
-
 
 @app.route("/time", methods=["GET", "POST"])
 def url_settime():
@@ -80,7 +89,7 @@ def url_settime():
         form_data = request.form.to_dict(flat=True)
         if 'desired_time' in form_data:
             new_time =  form_data['desired_time'][1:] # without the first character
-            print(F"WE WANT {new_time}")
+            logging.debug(F"WE WANT {new_time}")
             server.send_cmd(F"/time set {new_time}")
     return redirect("/oppanel", code=302)
 
@@ -90,7 +99,7 @@ def url_weather():
         form_data = request.form.to_dict(flat=True)
         if 'desired_weather' in form_data:
             new_weather =  form_data['desired_weather'][1:] # without the first character
-            print(F"WE WANT {new_weather}")
+            logging.debug(F"WE WANT {new_weather}")
             # server.set_weather(new_time)
             server.send_cmd(F"/weather {new_weather}")
     return redirect("/oppanel", code=302)
@@ -117,6 +126,9 @@ def url_player(player):
         server.send_cmd(F"/tp {player} {dst}")
     return redirect("/oppanel", code=302)
 
+# /execute in the_end run tp <player> <location>   #https://gaming.stackexchange.com/questions/292340/teleporting-a-player-from-the-overworld-to-the-end
+# /execute in the_end run tp Poseidon 0,0,0
+
 @app.route("/announce", methods=["GET", "POST"])
 def url_announce():
     if request.environ['REQUEST_METHOD'] == "POST":
@@ -133,11 +145,10 @@ def timed_job():
     requests.post("http://127.0.0.1:25564/announce", data={'text': msg} )
 
 if __name__ == "__main__":
-    server = OurRcon(server = socket.gethostname(), passwd = "changeme_iam_a_password")
+    server = OurRcon(server = mcserver, passwd = mcpass)
 
-    x = threading.Thread(target = sched.start)
-    x.start()
-
+    timer = threading.Thread(target = sched.start)
+    timer.start()
 
     app.run(debug=False, host='0.0.0.0', port=25564)
 

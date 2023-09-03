@@ -16,7 +16,7 @@ services:
       MEMORY: "4G"
       SEED: "-7255571058704538969"
       MAX_PLAYERS: 6
-      SERVER_NAME: "server.camp"
+      SERVER_NAME: "our.server"
       DIFICULTY: "NORMAL"
       MOTD: "Our Server"
       ICON: "https://github.com/maldex/McServerCompanion/blob/main/templates/server-icon.png?raw=true"

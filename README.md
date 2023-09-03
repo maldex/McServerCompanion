@@ -16,7 +16,7 @@ pip3 install mcrcon flask apscheduler requests
 # add as service
 sudo systemctl enable --now ${PWD}/McServerCompanion.service
 
-# test the rcon module
+# verify py RCon  
 import socket
 from mcrcon import MCRcon
 mcr = MCRcon( socket.gethostname(), "changeme_iam_a_password")

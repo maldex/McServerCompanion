@@ -1,10 +1,13 @@
 {% extends "base.html" %}
 {% block title %}OPPANEL{% endblock %}
 {% block content %}
+<hr/>
+{{players}}
+<hr/>
 <table border="0" width="100%">
     <form method="post" action="/time">
         <tr>
-            <td>Time: {{current}} ({{ ((current / 24000)*100)|round(0) }}%)</td>
+            <td>Time: {{current}} ({{ ((current / 24000)*100)|round(0) }}% )</td>
             {% for daytime in ["🌄day", "🌞noon", "🌃night", "🌕midnight"] %}
             <td align="center">
             <input type="submit" name="desired_time" value={{daytime}}>
@@ -34,15 +37,18 @@
         <tr>
             <td>{{player.name}}
             <input type="hidden" name="Pos" value="{{player['Pos']}}">
+            <input type="hidden" name="Dim" value="{{player['Dim']}}">
             <input type="hidden" name="LastDeath" value="{{player['LastDeath']}}">
+            <input type="hidden" name="LastDim" value="{{player['LastDim']}}">
+
 
             </td>
 
             <td><input type="submit" name="mode" value="👞kick">
                 <input type="submit" name="mode" value="☝️OP">
                 <input type="submit" name="mode" value="👇DEOP"></td>
-            <td><input type="submit" name="mode" value="🎓creative">
-                <input type="submit" name="mode" value="🍕survival"></td>
+            <td><input type="submit" name="mode" value="🍕survival">
+                <input type="submit" name="mode" value="🎓creative"></td>
             <td>
                 <input type="submit" name="mode" value="🔍teleport to">
                 <select name="tp_to">

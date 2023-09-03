@@ -55,12 +55,10 @@ class OurRcon():
                 p['LastDeath'] = None
                 p['lastDim'] = None
 
-            p['Health'] = float(
+            p['Health'] = int(float(
                 self.send_cmd(F"data get entity @p[name={p['name']}] Health").split('data: ')[-1].replace('f','')
-            )/2
-            p['Health'] = int(int(p['Health']) / 2)
-            # p['Health'] = "♥" * (p['Health']) + \
-            #               "♡" * (10 - int(p['Health']))
+            ) /2 )
+
             ret.append(p)
 
         return ret

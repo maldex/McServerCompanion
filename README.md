@@ -9,13 +9,20 @@ Little Flask-ui for small teams, allowing time and weather changes, and teleport
 Everything for minecraft of coarse. we're using [mc server container](https://github.com/itzg/docker-minecraft-server) and [docker-compose](https://docs.docker.com/compose/install/)
 
 ### get started
-```python
+```bash
+# stop any previous compose service
+docker compose down 
+
+# launch the compose service
+docker compose up -d 
+
 # install python requirements
 pip3 install mcrcon flask apscheduler requests
 
 # add as service
 sudo systemctl enable --now ${PWD}/McServerCompanion.service
-
+```
+```bash
 # verify py RCon  
 import socket
 from mcrcon import MCRcon

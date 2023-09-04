@@ -9,7 +9,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
-mcserver = "server.camp" #socket.gethostname()
+mcserver = socket.gethostname()
 mcpass = "changeme_iam_a_password"
 
 class OurRcon():
@@ -78,6 +78,7 @@ def get_server_message(file="./McServerCompanion.last_msg"):
     except Exception as e:
         return None
 
+############################################################################################################
 app = Flask(__name__)
 
 @app.route('/favicon.ico')

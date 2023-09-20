@@ -57,7 +57,7 @@
                 <input type="submit" Name="mode" value="🔍teleport to">
                 <select Name="tp_to">
                 {% if player.LastDeath is not none %}
-                <option value="{{player.LastDeath}};{{player.LastDim}}">LastDeath</option>
+                <option value="lastdeath;{{player.LastDeath}};{{player.LastDim}}">LastDeath</option>
                 {% endif %}
                 {% for p in players %} {% if p.Name != player.Name %}<option value="{{p.Name}};{{p.Pos}};{{p.Dim}}">{{p.Name}}</option> {% endif %}
                 {% endfor %}

@@ -12,7 +12,7 @@
             <td>Time: {{current}} ({{ ((current / 24000)*100)|round(0) }}% )</td>
             {% for daytime in ["🌄day", "🌞noon", "🌛night", "🌕midnight"] %}
             <td align="center">
-            <input type="submit" name="desired_time" value={{daytime}}>
+            <input type="submit" Name="desired_time" value={{daytime}}>
             </td>
             {% endfor %}
         </tr>
@@ -23,7 +23,7 @@
                 <td>Weather</td>
                 {% for weather in ["🌞clear", "🌧rain", "❄snow","🗲thunder"] %}
                 <td align="center">
-                <input type="submit" name="desired_weather" value={{weather}}>
+                <input type="submit" Name="desired_weather" value={{weather}}>
                 </td>
                 {% endfor %}
             </tr>
@@ -34,34 +34,34 @@
 
 <table border="0" width="100%">
     {% for player in players %}
-    <form method="post" action="/player/{{player.name}}">
-
+    <form method="post" action="/player/{{player.Name}}">
         <tr>
             <td>
-                <b>{{player.name}}</b></br>
+                <b>{{player.Name}}</b></br>
                 <small>{% for i in range(0,player.Health,1)%}♥{% endfor %}{% for i in range(10,player.Health,-1)%}♡{% endfor %}</small>
             </td><td>
                 <small>Current: {{player.Pos}}({{player.Dim}})</small></br>
                 <small>Last: {{player.LastDeath}}({{player.LastDim}})</small></br>
             </td><td>
-            <input type="hidden" name="Pos" value="{{player.Pos}}">
-            <input type="hidden" name="Dim" value="{{player.Dim}}">
-            <input type="hidden" name="LastDeath" value="{{player.LastDeath}}">
-            <input type="hidden" name="LastDim" value="{{player.LastDim}}">
+            <input type="hidden" Name="Pos" value="{{player.Pos}}">
+            <input type="hidden" Name="Dim" value="{{player.Dim}}">
+            <input type="hidden" Name="LastDeath" value="{{player.LastDeath}}">
+            <input type="hidden" Name="LastDim" value="{{player.LastDim}}">
 
-                <input type="submit" name="mode" value="👞kick">
-                <input type="submit" name="mode" value="☝️OP">
-                <input type="submit" name="mode" value="👇DEOP"></td>
-            <td><input type="submit" name="mode" value="🍕survival">
-                <input type="submit" name="mode" value="🎓creative"></td>
+                <input type="submit" Name="mode" value="👞kick">
+                <input type="submit" Name="mode" value="☝️OP">
+                <input type="submit" Name="mode" value="👇DEOP"></td>
+            <td><input type="submit" Name="mode" value="🍕survival">
+                <input type="submit" Name="mode" value="🎓creative"></td>
             <td>
-                <input type="submit" name="mode" value="🔍teleport to">
-                <select name="tp_to">
+                <input type="submit" Name="mode" value="🔍teleport to">
+                <select Name="tp_to">
                 {% if player.LastDeath is not none %}
                 <option value="{{player.LastDeath}};{{player.LastDim}}">LastDeath</option>
                 {% endif %}
-                {% for p in players %} {% if p.name != player.name %}<option value="{{p.Pos}};{{p.Dim}}">{{p.name}}</option> {% endif %}
+                {% for p in players %} {% if p.Name != player.Name %}<option value="{{p.Name}};{{p.Pos}};{{p.Dim}}">{{p.Name}}</option> {% endif %}
                 {% endfor %}
+                {% for place in places %}<option value="{{place.Name}};{{place.Pos}};{{place.Dim}}">Place:{{place.Name}}</option>{% endfor %}
                 </select>
             </td>
         </td>

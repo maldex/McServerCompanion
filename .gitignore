@@ -6,5 +6,6 @@
 .local/
 .backups/
 .config/
+places.json
 data/
 McServerCompanion.last_msg

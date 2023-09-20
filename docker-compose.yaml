@@ -16,7 +16,7 @@ services:
       MEMORY: "4G"
       SEED: "-7255571058704538969"
       MAX_PLAYERS: 6
-      SERVER_NAME: "our.server"
+      SERVER_NAME: "server.camp"
       DIFICULTY: "NORMAL"
       MOTD: "Our Server"
       ICON: "https://github.com/maldex/McServerCompanion/blob/main/templates/server-icon.png?raw=true"
@@ -39,7 +39,7 @@ services:
       BACKUP_INTERVAL: "8h"
       PRUNE_BACKUPS_DAYS: "7"
       RCON_HOST: "mc"
-      PAUSE_IF_NO_PLAYERS: "true"
+      PAUSE_IF_NO_PLAYERS: "false"
     volumes:
     - ./data:/data:ro,z
     - ./backups:/backups:z

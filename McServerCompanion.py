@@ -6,11 +6,13 @@ import ast, json, logging, datetime, threading, requests, os, socket, os, sys
 from flask import Flask, request, render_template, redirect, send_file
 from mcrcon import MCRcon
 from apscheduler.schedulers.blocking import BlockingScheduler
+from pprint import pprint
 
 logging.basicConfig(format='%(levelname)s:%(message)s', level=logging.DEBUG)
 
-mcserver = socket.gethostname()
+mcserver = socket.gethostname() # localhost
 mcpass = "changeme_iam_a_password"
+
 
 class OurRcon():
     def __init__(self, server="server.camp", passwd="a_password"):
@@ -33,21 +35,21 @@ class OurRcon():
     def get_players(self):
         ret = []
         for p in self.send_cmd("/list uuids").split(':')[-1].split(','):
-            p = { 'name': p.split(' ')[1],
+            p = { 'Name': p.split(' ')[1],
                   'uuid': p[p.find("(")+1:p.find(")")]
             }
 
             p['Pos'] = json.loads(
-                self.send_cmd(F"data get entity @p[name={p['name']}] Pos").split('data: ')[-1].replace('d','')
+                self.send_cmd(F"data get entity @p[name={p['Name']}] Pos").split('data: ')[-1].replace('d','')
             )
             p['Pos'] = [ int(c) for c in p['Pos'] ]
 
             p['Dim'] = (
-                self.send_cmd(F"data get entity @p[name={p['name']}] Dimension").split('data: ')[-1]
+                self.send_cmd(F"data get entity @p[name={p['Name']}] Dimension").split('data: ')[-1]
             )[+1: -1].replace('"','').split(':')[-1]
 
             try:
-                LastDeath = self.send_cmd(F"data get entity @p[name={p['name']}] LastDeathLocation").split('data: ')[
+                LastDeath = self.send_cmd(F"data get entity @p[name={p['Name']}] LastDeathLocation").split('data: ')[
                     -1].replace('I; ', '')
                 p['LastDeath'] = [int(c.strip()) for c in LastDeath[LastDeath.find("[") + 1:LastDeath.find("]")].split(',')]
                 p['LastDim'] = LastDeath.split('dimension:')[-1].replace('"','').replace('}','').split(':')[-1]
@@ -56,12 +58,21 @@ class OurRcon():
                 p['lastDim'] = None
 
             p['Health'] = int(float(
-                self.send_cmd(F"data get entity @p[name={p['name']}] Health").split('data: ')[-1].replace('f','')
+                self.send_cmd(F"data get entity @p[name={p['Name']}] Health").split('data: ')[-1].replace('f','')
             ) /2 )
 
             ret.append(p)
 
         return ret
+
+def get_places():
+    with open('places.json','r') as f:
+        places = json.loads(f.read())
+    return places
+
+def set_places(places):
+    with open('places.json','w') as f:
+        f.write(json.dumps(places, indent=True))
 
 # very nasty way of peristing a string in flask :(
 def set_server_message(msg, file="./McServerCompanion.last_msg"):
@@ -101,16 +112,58 @@ def url_announce():
         return redirect("/", code=302)
     return render_template("announce.html")
 
+
+@app.route("/place/<string:place>", methods=["GET", "POST"])
+def url_place(place):
+    form_data = request.form.to_dict(flat=True)
+    mode = form_data['mode'][1:].strip()  # remove first unicode character
+    pprint(F"PLACE value: {place}  -  {mode}")
+    pprint(form_data)
+
+    places = get_places()
+
+    if 'new place' in mode:
+        places.append({'Name': F"({form_data['new_name']}){form_data['player_loc'].split(';')[0]}",
+                       'Pos': form_data['player_loc'].split(';')[1],
+                       'Dim': form_data['player_loc'].split(';')[2]})
+
+    for i in range(0,len(places)):
+        if places[i]['Name'] in place:
+            logging.info(F"Removing place {places.pop(i)}")
+            break
+
+    if 'update' in mode:
+        new = {'Name': form_data['Name'],
+                      'Dim': form_data['Dim'],
+                      'Pos': form_data['Pos']}
+        logging.info(F"Adding place {new}")
+        places.append(new)
+
+    set_places(places)
+    return redirect("/places", code=302)
+
+@app.route("/places", methods=["GET", "POST"])
+def url_places():
+    form_data = request.form.to_dict(flat=True)
+    try:
+         current_players = server.get_players()
+    except Exception as e:
+         return "<title>no user</title><h1><p>seems noone is logged in!</p></h1>"
+    return render_template("places.html",
+                           players=current_players,
+                           places=get_places(),
+                           now=datetime.datetime.now().strftime("%Y-%m-%d_%H_%M") )
+
 @app.route("/oppanel", methods=["GET", "POST"])
 def url_oppannel():
-    current_players = server.get_players()
-    # try:
-    #     current_players = server.get_players()
-    # except Exception as e:
-    #     return "<title>no user</title><h1><p>seems noone is logged in!</p></h1>"
+    try:
+         current_players = server.get_players()
+    except Exception as e:
+         return "<title>no user</title><h1><p>seems noone is logged in!</p></h1>"
     return render_template("oppanel.html",
                            current = server.get_time(),
                            players = current_players,
+                           places = get_places(),
                            server_message = get_server_message() )
 
 @app.route("/time", methods=["GET", "POST"])
@@ -152,7 +205,7 @@ def url_player(player):
     elif "teleport to" in mode:
         dst = form_data['tp_to']
         logging.debug(F"to to:  {form_data['tp_to']}")
-        dst, dim = form_data['tp_to'].split(';')
+        usr, dst, dim = form_data['tp_to'].split(';')
         dst = ' '.join([ str(d) for d in ast.literal_eval(dst)])
         set_server_message( server.send_cmd(F"execute in {dim} run tp {player} {dst}") )
     return redirect("/oppanel", code=302)
@@ -173,5 +226,5 @@ if __name__ == "__main__":
     timer = threading.Thread(target = sched.start)
     timer.start()
 
-    app.run(debug=False, host='0.0.0.0', port=25564)
+    app.run(debug=True, host='0.0.0.0', port=25564)
 
